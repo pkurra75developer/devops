@@ -1640,7 +1640,6 @@ A modular shell scripting framework with advanced features for building complex 
 
 ### Installation
 
-```bash
 # Clone the repository
 git clone https://github.com/yourusername/myproject.git
 cd myproject
@@ -1650,3 +1649,20 @@ sudo make install
 
 # Or install to custom location
 INSTALL_PREFIX=$HOME/.local make install
+
+
+
+# Show help
+myproject --help
+
+# Start application
+myproject start
+
+# Check status
+myproject status
+
+# View configuration
+myproject config
+
+# Run tests
+myproject test
