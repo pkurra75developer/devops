@@ -1,0 +1,152 @@
+Supercharged Linux SysAdmin One Liners
+
+System Monitoring & Performance
+• htop || top -c — real time system processes.
+• ps aux --sort=-%mem \| head -10 — top memory hogs.
+• ps aux --sort=-%cpu \| head -10 — top CPU users.
+• du -sh */ \| sort -hr — directory disk usage sorted.
+• find . -type f -exec ls -lh {} + \| sort -k5 -hr \| head -10 — largest files here.
+• iotop -ao || iostat -x 1 — I/O intensive processes.
+• ss -tulpn \| grep LISTEN — listening ports and services.
+• iftop || nethogs — real time network traffic per process.
+• uptime && free -h && df -h — quick health snapshot.
+• grep "Failed password" /var/log/auth.log \| tail -10 — recent failed logins.
+• dmesg -T | sed -e '…' — color enhanced kernel logs.
+• watch -n 1 'ss -tuln' — monitor open ports live.
+• ncdu — interactive disk usage analyzer.
+• pv access.log \| gzip > access.log.gz — monitor compression progress.
+• systemctl --type=service --state=running | awk '{print $1}' | xargs -I {} sh -c 'echo -n "{}: "; systemctl show {} --property=MemoryCurrent --value' — memory usage by service (via cgroups) 
+• ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%cpu \| head -10 — find processes causing high load.
+• ss -s \| grep -E "estab|listen|time-wait" — network connections by state.
+• iotop -b -n 1 \| head -20 — disk I/O by process (batch mode).
+• for file in /proc/*/status; do awk '/VmSwap|Name/{printf $2 " " $3}END{print ""}' $file; done \| sort -k 2 -n \| tail -10 — swap usage by process.
+________________________________________
+File Operations & Management
+• find /path -type f -mtime +30 -delete — purge old files.
+• find / -type f -size +100M 2>/dev/null — grab oversize files.
+• tar czf backup_$(date +%Y%m%d_%H%M%S).tar.gz /path/to/backup — timestamped backup.
+• rsync -avh --progress source/ destination/ — copy with progress.
+• fdupes -r /path — duplicate file finder.
+• find /path -type f -exec md5sum {} + \| sort \| uniq -w32 -dD — dedupe via hash.
+• rename 's/ /_/g' * — strip spaces in filenames.
+• grep -r "search_text" /path --include="*.conf" — search within conf files.
+• diff -u file1 file2 \| colordiff — colored diff display.
+• mkdir -p /path && touch /path/file.txt — nested path + file.
+• extract() { … } — multipurpose archive extractor.
+• mount \| column -t — formatted mount output.
+• less +F logfile — less as tail -f.
+• find /path -type f -mmin -30 — find files modified in the last N minutes.
+• rsync -av --delete source/ destination/ — sync directories with deletion.
+• find /path -type l ! -exec test -e {} \; -print — find broken symlinks.
+• find . -type f | sed 's/.*\.//' | sort | uniq -c | sort -nr — count files by extension.
+• find /path -type f -perm 0777 -ls — find files with 0777 permissions.
+________________________________________
+Network & Connectivity
+• for host in a b c; do ping -c1 $host && echo OK || echo FAIL; done — multi-host pings.
+• nmap -p 22,80,443 target_host — port scan.
+• wget -c http://… — resume downloads.
+• python3 -m http.server 8000 — quick file server.
+• curl ifconfig.me || curl ipinfo.io/ip — check external IP.
+• dig @8.8.8.8 google.com \| grep "Query time" — DNS query speed.
+• curl -o /dev/null -s -w "Downloaded at %{speed_download}\n" URL — bandwidth test.
+• ssh -L 8080:localhost:80 user@remote_host — setup local port forwarding.
+• echo | openssl s_client -connect example.com:443 2>/dev/null \| openssl x509 -noout -dates — SSL expiry.
+• ss -p — show processes using each socket.
+• nmap -p 22,80,443,3306,5432 target_host — test multiple ports.
+• ip route show \| column -t — formatted routing table.
+• cat /proc/net/dev \| awk '{print $1,$2,$10}' \| column -t — monitor bandwidth per interface.
+• time nslookup google.com — DNS lookup with timing.
+• tracepath google.com — check MTU path discovery.
+________________________________________
+Security & User Management
+• rkhunter --check --sk || chkrootkit — rootkit scan.
+• tail -f /var/log/auth.log \| grep "Failed password" — watch failed attempts.
+• grep -E "/bin/(bash|sh|zsh)" /etc/passwd — list user shells.
+• find / -perm /6000 -type f 2>/dev/null — SUID/SGID search.
+• for user in …; do chage -l $user 2>/dev/null \| grep "Password expires"; done — password expiry.
+• openssl rand -base64 32 — strong password generator.
+• find / -type f -perm -002 2>/dev/null — world-writable files.
+• passwd -l username — lock a user.
+• grep sudo /var/log/auth.log \| tail -20 — sudo activity audit.
+• type -all command — check alias or builtin.
+• netstat -an \| grep ESTABLISHED \| awk '{print $5}' \| cut -d: -f1 \| sort \| uniq -c \| sort -nr — check established network connections.
+• find /etc /bin /sbin /usr/bin /usr/sbin -type f -mtime -1 2>/dev/null — recently modified system files.
+• ps aux | grep -E "(nc|netcat|ncat|socat|telnet)" | grep -v grep — suspicious processes.
+• find /etc -type f -perm /o+w -ls — audit writable files in /etc.
+• find / -nouser -o -nogroup 2>/dev/null — files with no owner or group.
+________________________________________
+Process Management
+• pkill -f "pattern" — kill by name pattern.
+• ps aux | awk '$8~/^Z/ {print $2}' \| xargs kill -9 — kill zombies.
+• timeout 30s command — command limiter.
+• pidstat -p $(pgrep process_name) 1 — monitor process stats.
+• nice -n 19 command — low priority execution.
+• nohup command > out.log 2>&1 & — persistent background run.
+• pstree -p $(pgrep process_name) — process hierarchy.
+• lsof -p $(pgrep process_name) — open files for process.
+• systemctl is-active --quiet svc || systemctl restart svc — auto restart service.
+• pkill -u username — kill all user processes.
+• sudo cpulimit -p pid -l 50 — cap CPU use.
+________________________________________
+Disk & Storage Management
+• df -h \| awk '$5>90 {print}' — alert on full file systems.
+• du -h --max-depth=1 / 2>/dev/null \| sort -hr \| head -10 — largest dirs at root.
+• apt autoremove && apt autoclean — Debian cleanup.
+• yum clean all || dnf clean all — RHEL cleanup.
+• find /path -type d -empty -delete — delete empty dirs.
+• fsck -n /dev/sda1 — dry run filesystem check.
+• iostat -x 1 — live I/O stats.
+• find /path -type f -mtime -1 — recent files.
+• dd if=/dev/zero of=testfile bs=1G count=1 oflag=direct — disk write test.
+• df -i — inode usage.
+• find /path -type l ! -exec test -e {} \; -print — (moves to File Operations above—already covered).
+________________________________________
+Log Analysis & Troubleshooting
+• tail -f /var/log/syslog \| grep --color "ERROR\|WARN\|FAIL" — live log errors.
+• grep -c "ERROR" /var/log/app.log — error count.
+• awk '{print $1}' access.log \| sort \| uniq -c \| sort -nr \| head — frequent visitor IPs.
+• journalctl -u service -f --since "1 hour ago" — service logs.
+• find /var/log -type f -size +100M -exec ls -lh {} + — big logs.
+• find /var/log -name "*.log" -mtime +7 -exec gzip {} \; — older logs gzip.
+• sed -n '/2024-01-01 10:00/,/2024-01-01 11:00/p' syslog — time range extract.
+• multitail /var/log/syslog /var/log/auth.log — multi log viewer.
+• dmesg | grep -i error — kernel errors.
+• awk '{print $9}' access.log \| sort \| uniq -c \| sort -nr — status patterns.
+________________________________________
+System Administration
+• uname -a && uptime && free -h && df -h && who — system overview.
+• apt update && apt upgrade -y — update Debian.
+• yum update -y || dnf update -y — update RPM.
+• for svc in nginx mysql ssh; do systemctl is-active $svc; done — service health check.
+• tar czf config_backup_$(date +%Y%m%d).tar.gz /etc/{passwd,shadow,group,fstab,hosts} — config snapshot.
+• sensors || cat /sys/class/thermal/…/temp — system temperature.
+• watch -n 5 'free -h && echo && df -h && echo && uptime' — live summary.
+• grep " install " /var/log/dpkg.log \| tail -10 — recent package installs.
+• for u in $(cut -f1 -d: /etc/passwd); do crontab -u $u -l 2>/dev/null; done — cron overview.
+• echo "CPU: $(nproc) cores, RAM: $(free -h | …), Disk: $(df -h / | …)" — quick resource calc.
+________________________________________
+Quick Fixes & Utilities
+• apt --fix-broken install — repair dependencies.
+• sync && echo 3 > /proc/sys/vm/drop_caches — clear cache.
+• history \| grep "cmd" — search history.
+• alias ll='ls -alF' — easy alias.
+• bc <<< "scale=2; 100/3" — quick math.
+• tr -dc A-Za-z0-9 </dev/urandom | head -c16; echo — random string.
+• [ -f /var/run/reboot-required ] && echo "Reboot required" — reboot check.
+• which cmd && man cmd \| head -5 — quick command info.
+• python3 -m http.server 8000 --bind 0.0.0.0 — public file server.
+• date -d @1640995200 — epoch to human.
+________________________________________
+Pro Tips & Fun Boosters
+• echo 'alias sysinfo="…"' >> ~/.bashrc — persistent alias.
+• healthcheck() { … } — quick local health function.
+• time command_to_monitor — execution time.
+• logsearch() { grep -r "$1" /var/log/ 2>/dev/null | head -20; } — log finder.
+• quickbackup() { tar czf "${1}_$(date +%Y%m%d_%H%M%S).tar.gz" "$1"; } — instant backup.
+• sudo !! — rerun last command with privileges.
+• !!: — reuse arguments of previous command.
+• reset — recover broken terminal.
+• time read — stopwatch.
+• while sleep 1; do …; done & — console clock script.
+• kill -9 \$(ps … Z … ) — zombie exterminator.
+
