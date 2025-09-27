@@ -32,7 +32,8 @@ print(firstName, middleName, lastName)
 
 
 # if you run this program using python3 comments.py, did you notice that print function automatically
-# adds a space in between your firstname, middlename and lastname? That's a good thing to know
+# adds a space in between your firstname, middlename and lastname? That's a 
+# good thing to know
 
 # how many arguments a print function can take?
 # let's try it out!
@@ -78,7 +79,7 @@ print("Hello\vWorld")
 # FORMATTING STRINGS
 
 # RAW STRINGS. IGNORE ESCAPE CHARACTERS
-print(r"I can put anthing I want C:\\India")
+print(r"I can put anything I want C:\\India")
 name = "Krishna"
 age  = 30
 # FORMAT STRINGS - Embed expressions or variables as below
