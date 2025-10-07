@@ -1,0 +1,24 @@
+literal_block: |+
+  I have a long story to tell.
+  One day, I decided to master 
+  YAML instead of watching House of Dragons.
+  I am successful in mastering YAML
+  with 3 hours. Since I left with ample of 
+  time, I end up watching House of Dragons as well.
+
+
+
+
+folded_block: >+
+  I have a long story to tell.
+  One day, I decided to master 
+  YAML instead of watching House of Dragons.
+  I am successful in mastering YAML
+  with 3 hours. Since I left with ample of 
+  time, I end up watching House of Dragons as well.
+
+
+
+
+
+
