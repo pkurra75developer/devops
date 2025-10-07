@@ -1,0 +1,14 @@
+person:
+  name: Praveen
+  sex: Male
+  age: 50
+  is_student: False
+  hobbies:
+    - reading
+    - writing
+    - watching films
+  address:
+    doorno: 62
+    street: Medworth
+    city: Peterborough
+    postcode: PE2 5RY
